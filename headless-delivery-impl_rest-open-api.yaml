@@ -1391,6 +1391,10 @@ components:
                         - $ref: "#/components/schemas/PageRowDefinition"
                         - $ref: "#/components/schemas/PageSectionDefinition"
                         - $ref: "#/components/schemas/PageWidgetInstanceDefinition"
+                key:
+                    description:
+                        The page element's key, which uniquely identifies the page element within the page definition.
+                    type: string
                 pageElements:
                     # @review
                     description:
@@ -2436,6 +2440,50 @@ components:
             required:
                 - title
             type: object
+        SitePageDraft:
+            description:
+                Represents the draft of site page.
+            properties:
+                actions:
+                    additionalProperties:
+                        additionalProperties:
+                            type: string
+                        type: object
+                    description:
+                        Block of actions allowed by the user making the request.
+                    readOnly: true
+                    type: object
+                creator:
+                    allOf:
+                        - $ref: "#/components/schemas/Creator"
+                    description:
+                        The page draft's creator.
+                    readOnly: true
+                dateCreated:
+                    description:
+                        The page draft's creation date.
+                    format: date-time
+                    readOnly: true
+                    type: string
+                dateModified:
+                    description:
+                        The last time any field of the page draft was changed.
+                    format: date-time
+                    readOnly: true
+                    type: string
+                friendlyUrlPath:
+                    description:
+                        A relative URL to the page draft's rendered content.
+                    readOnly: true
+                    type: string
+                viewableBy:
+                    enum:
+                        - Anyone
+                        - Members
+                        - Owner
+                    type: string
+                    writeOnly: true
+            type: object
         SitePageFormSubmissionResult:
             # @review
             description:
@@ -2630,7 +2678,62 @@ paths:
                                     $ref: "#/components/schemas/SitePage"
                                 type: array
             tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/draft":
+        post:
+            description:
+                Creates a new page draft
+            operationId: postSiteSitePageDraft
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: pageTemplateKey
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: parentPageFriendlyURL
+                  example: /my-page
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SitePageDraft"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/SitePageDraft"
+            tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}":
+        delete:
+            description:
+                Deletes the page and returns a 204 if the operation succeeds.
+            operationId: deleteSiteSitePage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                204:
+                    content:
+                        application/json: {}
+                        application/xml: {}
+            tags: ["SitePage"]
         get:
             # @review
             description:
@@ -2664,6 +2767,383 @@ paths:
                   name: Accept-Language
                   schema:
                       type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SitePage"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/SitePage"
+            tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft":
+        # @LPS-171726
+        delete:
+            description:
+                Deletes the draft of a page and returns a 204 if the operation succeeds.
+            operationId: deleteSiteSitePageDraft
+            parameters:
+                    - in: path
+                      name: siteId
+                      required: true
+                      schema:
+                          format: int64
+                          type: integer
+                    - in: path
+                      name: friendlyUrlPath
+                      required: true
+                      schema:
+                          type: string
+            responses:
+                204:
+                    content:
+                        application/json: {}
+                        application/xml: {}
+            tags: ["SitePage"]
+        get:
+            description:
+                Retrieves the draft of a given Page
+            operationId: getSiteSitePageDraft
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: fields
+                  schema:
+                      type: string
+                - in: query
+                  name: restrictFields
+                  schema:
+                      type: string
+                - in: header
+                  name: Accept-Language
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SitePageDraft"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/SitePageDraft"
+            tags: ["SitePage"]
+        post:
+            description:
+                Creates a draft of an existing page
+            operationId: postSiteSitePageDraft
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  description: Friendly URL of the page to create the draft from
+                  example: my-page
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SitePageDraft"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/SitePageDraft"
+            tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences":
+        post:
+            description:
+                Creates a new experience in the draft of a given Page
+            operationId: postSiteSitePagesExperiencePage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: fields
+                  schema:
+                      type: string
+                - in: query
+                  name: nestedFields
+                  schema:
+                      type: string
+                - in: query
+                  name: restrictFields
+                  schema:
+                      type: string
+                - in: header
+                  name: Accept-Language
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/SitePage"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/SitePage"
+                                type: array
+            tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences/{experienceKey}":
+        patch:
+            description:
+                Updates only the fields received in the request body, leaving any other fields untouched.
+            operationId: patchSiteSitePageDraftExperience
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+                - in: path
+                  name: experienceKey
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Experience"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Experience"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Experience"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Experience"
+            tags: ["SitePage"]
+        put:
+            description:
+                Replaces the draft of a page draft experience with the information sent in the request body. Any missing fields are
+                deleted, unless they are required.
+            operationId: putSiteSitePageDraftExperience
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+                - in: path
+                  name: experienceKey
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Experience"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Experience"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Experience"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Experience"
+            tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences/{experienceKey}/page-definition":
+        put:
+            description:
+                Replaces the page definition of a page draft experience with the information sent in the request body. Any missing fields are
+                deleted, unless they are required.
+            operationId: putSiteSitePageDraftExperiencePageDefinition
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+                - in: path
+                  name: experienceKey
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PageDefinition"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/PageDefinition"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/PageDefinition"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/PageDefinition"
+            tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences/{experienceKey}/page-definition/page-elements/{pageElementKey}":
+        put:
+            description:
+                Replaces the page element of a page definition of a page draft experience with the information sent in the request body. Any missing fields are
+                deleted, unless they are required.
+            operationId: putSiteSitePageDraftExperiencePageDefinitionPageElement
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+                - in: path
+                  name: experienceKey
+                  required: true
+                  schema:
+                      type: string
+                - in: path
+                  name: pageElementKey
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PageElement"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/PageElement"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/PageElement"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/PageElement"
+            tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences/{experienceKey}/page-definition/page-elements/{pageElementKey}/page-elements":
+        post:
+            description:
+                Adds a new page element as a child of the specified page element within the page definition of a page draft experience with the information sent in the request body. Any missing fields are
+                deleted, unless they are required.
+            operationId: postSiteSitePageDraftExperiencePageDefinitionPageElementPageElements
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+                - in: path
+                  name: experienceKey
+                  required: true
+                  schema:
+                      type: string
+                - in: path
+                  name: pageElementKey
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PageElement"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/PageElement"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/PageElement"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/PageElement"
+            tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/publish":
+        post:
+            description:
+                Publishes the draft of a given Page
+            operationId: postSiteSitePageDraftPublish
+            parameters:
+                    - in: path
+                      name: siteId
+                      required: true
+                      schema:
+                          format: int64
+                          type: integer
+                    - in: path
+                      name: friendlyUrlPath
+                      required: true
+                      schema:
+                          type: string
             responses:
                 200:
                     content:
@@ -2714,6 +3194,7 @@ paths:
                         application/json:
                             schema:
                                 items:
+                                    # Why do we return a SitePage? We should return an Experience?
                                     $ref: "#/components/schemas/SitePage"
                                 type: array
                         application/xml:
@@ -2766,6 +3247,7 @@ paths:
                     content:
                         application/json:
                             schema:
+                                # Why do we return a SitePage? We should return an Experience?
                                 $ref: "#/components/schemas/SitePage"
                         application/xml:
                             schema:
@@ -2847,4 +3329,74 @@ paths:
                         text/html:
                             schema:
                                 type: string
+            tags: ["SitePage"]
+    "/sites/{siteId}/site-pages/{friendlyUrlPath}/site-pages":
+        get:
+            # @review
+            description:
+                Retrieves the child public pages of a page
+            operationId: getSiteSitePageSitePages
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: friendlyUrlPath
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: aggregationTerms
+                  schema:
+                      items:
+                          type: string
+                      type: array
+                - in: query
+                  name: fields
+                  schema:
+                      type: string
+                - in: query
+                  name: nestedFields
+                  schema:
+                      type: string
+                - in: query
+                  name: restrictFields
+                  schema:
+                      type: string
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/SitePage"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/SitePage"
+                                type: array
             tags: ["SitePage"]
