@@ -2677,6 +2677,7 @@ paths:
                                 items:
                                     $ref: "#/components/schemas/SitePage"
                                 type: array
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/draft":
         post:
@@ -2710,6 +2711,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/SitePageDraft"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}":
         delete:
@@ -2733,6 +2735,7 @@ paths:
                     content:
                         application/json: {}
                         application/xml: {}
+                    description: ""
             tags: ["SitePage"]
         get:
             # @review
@@ -2776,6 +2779,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/SitePage"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft":
         # @LPS-171726
@@ -2800,6 +2804,7 @@ paths:
                     content:
                         application/json: {}
                         application/xml: {}
+                    description: ""
             tags: ["SitePage"]
         get:
             description:
@@ -2838,6 +2843,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/SitePageDraft"
+                    description: ""
             tags: ["SitePage"]
         post:
             description:
@@ -2866,6 +2872,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/SitePageDraft"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences":
         post:
@@ -2913,6 +2920,7 @@ paths:
                                 items:
                                     $ref: "#/components/schemas/SitePage"
                                 type: array
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences/{experienceKey}":
         patch:
@@ -2953,6 +2961,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/Experience"
+                    description: ""
             tags: ["SitePage"]
         put:
             description:
@@ -2993,6 +3002,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/Experience"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences/{experienceKey}/page-definition":
         put:
@@ -3034,6 +3044,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/PageDefinition"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences/{experienceKey}/page-definition/page-elements/{pageElementKey}":
         put:
@@ -3080,6 +3091,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/PageElement"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/experiences/{experienceKey}/page-definition/page-elements/{pageElementKey}/page-elements":
         post:
@@ -3126,6 +3138,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/PageElement"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/draft/publish":
         post:
@@ -3153,6 +3166,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/SitePage"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/experiences":
         get:
@@ -3202,6 +3216,7 @@ paths:
                                 items:
                                     $ref: "#/components/schemas/SitePage"
                                 type: array
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/experiences/{experienceKey}":
         get:
@@ -3252,6 +3267,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/SitePage"
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/experiences/{experienceKey}/rendered-page":
         get:
@@ -3293,6 +3309,7 @@ paths:
                         text/html:
                             schema:
                                 type: string
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/rendered-page":
         get:
@@ -3329,6 +3346,7 @@ paths:
                         text/html:
                             schema:
                                 type: string
+                    description: ""
             tags: ["SitePage"]
     "/sites/{siteId}/site-pages/{friendlyUrlPath}/site-pages":
         get:
@@ -3399,4 +3417,5 @@ paths:
                                 items:
                                     $ref: "#/components/schemas/SitePage"
                                 type: array
+                    description: ""
             tags: ["SitePage"]

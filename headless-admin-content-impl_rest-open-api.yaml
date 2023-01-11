@@ -244,6 +244,7 @@ paths:
                                 items:
                                     $ref: "#/components/schemas/DisplayPageTemplate"
                                 type: array
+                    description: ""
             tags: ["DisplayPageTemplate"]
     "/sites/{siteId}/display-page-templates/{displayPageTemplateKey}":
         get:
@@ -288,6 +289,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/DisplayPageTemplate"
+                    description: ""
             tags: ["DisplayPageTemplate"]
     "/sites/{siteId}/page-definitions/preview":
         # @review
@@ -316,4 +318,5 @@ paths:
                         text/html:
                             schema:
                                 type: string
+                    description: ""
             tags: ["PageDefinition"]
